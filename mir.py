@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import numpy as np
 import csv
+import nltk
 
 start_fileid = 1
 end_fileid = 106
