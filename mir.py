@@ -5,19 +5,20 @@ import numpy as np
 import csv
 
 start_fileid = 1
-end_fileid = 106
+end_fileid = 1502
+instrument = "trumpet"
 
 filename = []
 name = ""
 for i in range(start_fileid,end_fileid+1):
-    name = "guitar (" + str(i) + ").mp3"
+    name = instrument + " (" + str(i) + ").mp3"
     filename.append(name)
 
 # Loading Files
 y = []
 sr = []
 for i in range(start_fileid-1,end_fileid):
-    y_temp, sr_temp = librosa.core.load("C:\\Users\\aksha\\Desktop\\Music_Information_Retrieval\\DataBase\\Instruments\\Guitar\\" + filename[i])
+    y_temp, sr_temp = librosa.core.load("C:\\Users\\aksha\\Desktop\\Music_Information_Retrieval\\DataBase\\Instruments\\" + instrument.title() + "\\" + filename[i])
     y.append(y_temp)
     sr.append(sr_temp)
 
@@ -87,7 +88,7 @@ for fileid in features:
         count = count+1
     fileid_counter = fileid_counter+1
     
-    with open("Guitar_DataSet.csv", 'a', newline='') as csvfile:
+    with open(instrument.title() + "_DataSet.csv", 'a', newline='') as csvfile:
         if header_flag == 0:
             writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
             writer.writeheader()
