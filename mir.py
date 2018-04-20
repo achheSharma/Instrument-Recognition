@@ -3,28 +3,48 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import numpy as np
 import csv
+import re
+from os import walk
+
+def sort_filenames(filenames):
+    convert = lambda text: int(text) if text.isdigit() else text
+    alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+    return (sorted(filenames, key = alphanum_key))
+
+def get_filenames(path):
+    directory = walk(path)
+    filenames = []
+    for i in directory:
+        for j in i[2]:
+            if ".wav" in j:
+                filenames.append(j)
+    return sort_filenames(filenames)
+
+instrument = "saxophone"
+folder = "AltoSax" + ".vib.ff.stereo"
+# folder = "AltoSax" + ".novib.ff.stereo"
+path = "C:\\Users\\aksha\\Desktop\\Music_Information_Retrieval\\DataBase\\Instruments\\" + instrument.title() + "\\" + folder + "\\"
+result = "AltoSax" + "_Vib" + "_DataSet.csv"
+# result = "AltoSax" + "_NonVib" + "_DataSet.csv"
+filenames = get_filenames(path)
 
 start_fileid = 1
-end_fileid = 1502
-instrument = "trumpet"
+end_fileid = len(filenames)
 
-filename = []
-name = ""
-for i in range(start_fileid,end_fileid+1):
-    name = instrument + " (" + str(i) + ").mp3"
-    filename.append(name)
+
 
 # Loading Files
+
 y = []
 sr = []
 for i in range(start_fileid-1,end_fileid):
-    y_temp, sr_temp = librosa.core.load("C:\\Users\\aksha\\Desktop\\Music_Information_Retrieval\\DataBase\\Instruments\\" + instrument.title() + "\\" + filename[i])
+    y_temp, sr_temp = librosa.core.load(path + filenames[i])
     y.append(y_temp)
     sr.append(sr_temp)
 
 features = []
 
-# '''
+# ''
 for i in range(start_fileid-1,end_fileid):
     arr = []
     temp_arr = []
@@ -51,9 +71,9 @@ for i in range(start_fileid-1,end_fileid):
 
 # for i in features:
     # print(i)
-# '''
+# ''
 
-# '''
+# ''
 fileid_counter = 1
 header_flag = 0
 dict_feature = {}
@@ -88,7 +108,7 @@ for fileid in features:
         count = count+1
     fileid_counter = fileid_counter+1
     
-    with open(instrument.title() + "_DataSet.csv", 'a', newline='') as csvfile:
+    with open(result, 'a', newline='') as csvfile:
         if header_flag == 0:
             writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
             writer.writeheader()
@@ -109,3 +129,5 @@ for fileid in features:
 # librosa.display.waveplot(y[0], sr[0])
 # plt.plot()
 # plt.show()
+
+# '''
